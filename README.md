@@ -40,3 +40,5 @@ python3 db_main.py
 
 ## Kontakt
 Fragen? Gerne über GitHub.
+
+Letzte Aktualisierung: August 2026
