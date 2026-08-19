@@ -37,3 +37,6 @@ python3 db_main.py
 - ✅ SQL & SQLAlchemy
 - 🔄 GenAI/RAG (in Arbeit)
 - ⬜ Cloud-Deployment (GCP)
+
+## Kontakt
+Fragen? Gerne über GitHub.
