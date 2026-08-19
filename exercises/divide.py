@@ -3,7 +3,7 @@ def safe_divide(a:float, b: float) -> float | str:
     result = a/b
     return result
   except ZeroDivisionError: 
-    return "Divison durch null nicht erlaubt"
+    return "Division durch Null nicht erlaubt"
 
 if __name__ == "__main__":
   print(safe_divide(100, 5)) 
