@@ -12,7 +12,7 @@ model = ChatGoogleGenerativeAI(
     google_api_key=os.environ["GOOGLE_API_KEY"]
 )
 
-zusammenfassung_prompt = ChatPromptTemplate.from_template("fasse '{wort}' zusammen. Nur das Wort.")
+zusammenfassung_prompt = ChatPromptTemplate.from_template("Fasse '{wort}' zusammen.")
 risiko_prompt = ChatPromptTemplate.from_template("Nenne die Risikoeinschätzung von '{wort}' in einem Satz.")
 
 parallel_chain = RunnableParallel(
