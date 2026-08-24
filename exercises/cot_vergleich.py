@@ -8,21 +8,26 @@ client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
 
 
 def frage_ohne_cot(aufgabe: str) -> str:
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=aufgabe
-    )
-    return response.text
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=aufgabe
+        )
+        return response.text
+    except Exception as e:
+        return f"Fehler bei der Anfrage: {e}"
 
 
 def frage_mit_cot(aufgabe: str) -> str:
-    prompt = aufgabe + "\nDenke Schritt für Schritt."
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=prompt
-    )
-    return response.text
-
+    try:
+        prompt = aufgabe + "\nDenke Schritt für Schritt."
+        response = client.models.generate_content(
+            model="gemini-3.6-flash",
+            contents=prompt
+        )
+        return response.text
+    except Exception as e:
+        return f"Fehler bei der Anfrage: {e}"
 
 aufgaben = [
     "Was ist 15% von 240?",
