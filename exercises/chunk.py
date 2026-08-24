@@ -10,4 +10,3 @@ chunks = splitter.split_documents(dokumente)
 for i, chunk in enumerate(chunks):
     print(f"--- Chunk {i} ---")
     print(chunk.page_content)
-
