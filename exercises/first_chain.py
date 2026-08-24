@@ -14,5 +14,5 @@ model = ChatGoogleGenerativeAI(
 prompt = ChatPromptTemplate.from_template("Erkläre {thema} in einem Satz.")
 chain = prompt | model | StrOutputParser()
 
-ergebnis = chain.invoke({"thema": "Photosynthese", "extra": "test"})
+ergebnis = chain.invoke({"thema": "Photosynthese"})
 print(ergebnis)
