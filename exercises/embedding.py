@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from cosine_similarity import cosine_similarity
+from langchain_chroma import Chroma
 
 load_dotenv()
 
@@ -14,13 +14,13 @@ embeddings = GoogleGenerativeAIEmbeddings(
 
 loader = TextLoader("data/schadensfall_beispiel.txt")
 dokumente = loader.load()
-splitter = RecursiveCharacterTextSplitter(chunk_size=60, chunk_overlap=20)
+splitter = RecursiveCharacterTextSplitter(chunk_size=300, chunk_overlap=20)
 chunks = splitter.split_documents(dokumente)
 
-frage = "Wie hoch ist der geschätzte Schaden?"
-frage_vektor = embeddings.embed_query(frage)
+vector_store = Chroma.from_documents(documents=chunks, embedding=embeddings)
 
-for chunk in chunks:
-    chunk_vektor = embeddings.embed_query(chunk.page_content)
-    ähnlichkeit = cosine_similarity(frage_vektor, chunk_vektor)
-    print(f"{ähnlichkeit:.3f} — {chunk.page_content}")
+frage = "Wie hoch ist der geschätzte Schaden?"
+ergebnisse = vector_store.similarity_search(frage, k=2)
+
+for doc in ergebnisse:
+    print(doc.page_content)
