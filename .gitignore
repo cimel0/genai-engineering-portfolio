@@ -4,3 +4,4 @@ __pycache__/
 data/firma.db
 .DS_Store
 .env
+chroma_db/
