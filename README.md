@@ -1,6 +1,6 @@
 # GenAI Engineering Portfolio
 
-Ein strukturiert aufgebautes Projekt zur Vertiefung von Software Engineering, Datenbanken und Generative-AI-Engineering — von Python-Grundlagen über relationale Datenmodellierung bis zu einem selbst entwickelten RAG-System (Retrieval-Augmented Generation).
+A structured project built to develop depth in software engineering, databases, and generative AI engineering, from Python fundamentals through relational data modeling to a self-built RAG system (Retrieval-Augmented Generation).
 
 ## Author
 - [@cimel0](https://www.github.com/cimel0)
@@ -10,17 +10,17 @@ Python, SQL (PostgreSQL, SQLite), LangChain (LCEL), Google Gemini API, Chroma (V
 
 ## Highlights
 
-**RAG-System von Grund auf entwickelt:** Dokumente werden geladen und in überlappende Chunks zerlegt, per Google-Gemini-Embeddings in Vektoren umgewandelt und in einer Chroma-Vektordatenbank gespeichert (inkl. Metadata-Filtering, z. B. nach Schadenstyp). Eine LCEL-Chain verbindet Retriever, Prompt und LLM zu einem vollständigen Frage-Antwort-System, das ausschliesslich auf Basis der gefundenen Dokumente antwortet.
+**RAG system built from the ground up:** Documents are loaded and split into overlapping chunks, embedded into vectors via Google Gemini embeddings, and stored in a Chroma vector database with metadata filtering (e.g. by claim type). An LCEL chain connects retriever, prompt, and LLM into a complete question-answering system that only answers based on retrieved documents.
 
-**Sauberes Software Engineering statt reinem Prompting:** Jede Änderung läuft über Git-Flow (Feature-Branches, Pull Requests, CI-Pipeline via GitHub Actions), die vor jedem Merge grün sein muss.
+**Real software engineering, not just prompting:** Every change goes through a Git-Flow workflow (feature branches, pull requests, a CI pipeline via GitHub Actions) that has to pass before anything gets merged.
 
-**Systematisches Debugging & Evaluation:** Unter anderem ein dokumentierter Fall, in dem ein LLM bei einer komplexen Chain-of-Thought-Aufgabe eine falsche Rechenreihenfolge selbstständig als "Standard-Praxis" deklarierte — ein reales, selbst gefundenes Halluzinations-Beispiel, das die Bedeutung von Evaluation zusätzlich zu reinem Bauen zeigt.
+**Systematic debugging and evaluation:** Including a documented case where an LLM, given a complex Chain-of-Thought task, picked a calculation order on its own and labeled it "standard practice" in insurance, a real, self-discovered hallucination example that shows why evaluation matters as much as building.
 
-## Projektstruktur
-- `app/` — Datenmodelle (Person, Produkt, Kunde, Bestellung) und SQLAlchemy-Anbindung an eine lokale SQLite-Datenbank
-- `exercises/` — Einzelübungen entlang des Lernpfads: Python-Grundlagen (Decorators, Generators, Context Manager), GenAI-Konzepte (Temperature/Softmax, Cosine Similarity, Chain-of-Thought), LCEL-Bausteine (erste Chain, RunnableParallel, RunnableLambda), RAG-Pipeline (Chunking, Embeddings, Metadata-Filtering, komplette RAG-Chain)
-- `data/` — CSV-Testdaten, Beispieltexte für RAG (Schadensfall-Szenarien) und lokale SQLite-Datenbank
-- `sql/` — SQL-Übungen (Joins, CTEs, Window Functions, Aggregation) sowie rohes DDL mit Entity-/Referential-Integrity-Constraints (ER-Modellierung, Foreign Keys, CHECK-Constraints)
+## Project Structure
+- `app/` — data models (Person, Product, Customer, Order) and SQLAlchemy connection to a local SQLite database
+- `exercises/` — individual exercises along the learning path: Python fundamentals (decorators, generators, context managers), GenAI concepts (temperature/softmax, cosine similarity, Chain-of-Thought), LCEL building blocks (first chain, RunnableParallel, RunnableLambda), RAG pipeline (chunking, embeddings, metadata filtering, full RAG chain)
+- `data/` — CSV test data, sample texts for RAG (insurance claim scenarios), and local SQLite database
+- `sql/` — SQL exercises (joins, CTEs, window functions, aggregation) plus raw DDL with entity and referential integrity constraints (ER modeling, foreign keys, CHECK constraints)
 
 ## Setup
 ```bash
@@ -29,54 +29,54 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Für die GenAI-Übungen wird ein Google-Gemini-API-Key benötigt (kostenloses Kontingent). In einer lokalen `.env`-Datei (gitignored) hinterlegen:
+The GenAI exercises need a Google Gemini API key (free tier). Add it to a local `.env` file (gitignored):
 ```
-GOOGLE_API_KEY=dein-api-key
+GOOGLE_API_KEY=your-api-key
 ```
 
 ## Usage
 
-Datenbank initialisieren (einmalig, erstellt Tabellen und Testdaten):
+Initialize the database (one-time, creates tables and test data):
 ```bash
 python3 -m app.db_setup
 ```
 
-Beispielabfragen ausführen (zeigt Bestellungen mit Kundennamen sowie Gesamtausgaben pro Kunde):
+Run sample queries (shows orders with customer names and total spending per customer):
 ```bash
 python3 db_main.py
 ```
 
-RAG-System ausführen (lädt Beispieldokumente, baut den Vector Store auf, beantwortet eine Beispielfrage ausschliesslich basierend auf dem gefundenen Kontext):
+Run the RAG system (loads sample documents, builds the vector store, answers a sample question based only on the retrieved context):
 ```bash
 python3 exercises/rag_chain.py
 ```
 
-## Architektur: RAG-Pipeline im Überblick
+## Architecture: RAG Pipeline Overview
 
-1. **Ingestion:** Dokumente laden (`TextLoader`) → in überlappende Chunks zerlegen (`RecursiveCharacterTextSplitter`)
-2. **Indexierung:** Jeder Chunk wird per Gemini-Embeddings vektorisiert und in Chroma gespeichert, inkl. Metadata (z. B. `schadenstyp`) für spätere Filterung
-3. **Retrieval:** Eine Nutzerfrage wird ebenfalls vektorisiert; Chroma liefert die semantisch ähnlichsten Chunks zurück, optional eingeschränkt per Metadata-Filter
-4. **Generation:** Gefundene Chunks + Originalfrage werden in einen Prompt eingebettet; das LLM generiert eine Antwort ausschliesslich basierend auf diesem Kontext, nicht aus eigenem Vorwissen
+1. **Ingestion:** Load documents (`TextLoader`) and split them into overlapping chunks (`RecursiveCharacterTextSplitter`)
+2. **Indexing:** Each chunk is embedded via Gemini embeddings and stored in Chroma, along with metadata (e.g. `claim_type`) for later filtering
+3. **Retrieval:** A user question is embedded the same way; Chroma returns the most semantically similar chunks, optionally restricted by a metadata filter
+4. **Generation:** Retrieved chunks and the original question are inserted into a prompt; the LLM generates an answer based only on this context, not on its own prior knowledge
 
-## Limitierungen & mögliche Verbesserungen
+## Limitations & Possible Improvements
 
-- Aktuell nur ein kleines, manuell erstelltes Test-Textkorpus (Schadensfall-Beispiele) — noch keine Evaluation auf einem grösseren, realistischen Datensatz
-- Kein Reranking-Schritt nach dem initialen Retrieval; bei grösseren Dokumentenmengen würde das die Präzision weiter verbessern
-- Keine automatisierten RAGAS-Metriken (Context Precision/Recall, Faithfulness, Answer Relevancy) integriert — aktuell nur manuelle, stichprobenartige Prüfung
-- Chunking-Parameter (`chunk_size`, `chunk_overlap`) sind statisch gewählt, nicht empirisch auf Retrieval-Qualität optimiert
-- Noch kein Cloud-Deployment (geplant: GCP, passend zum genutzten Gemini-Ökosystem)
+- Currently only a small, manually created test corpus (insurance claim examples); no evaluation yet on a larger, realistic dataset
+- No reranking step after initial retrieval; this would improve precision further on larger document sets
+- No automated RAGAS metrics (Context Precision/Recall, Faithfulness, Answer Relevancy) integrated yet, only manual spot-checking so far
+- Chunking parameters (`chunk_size`, `chunk_overlap`) are set statically rather than tuned empirically against retrieval quality
+- No cloud deployment yet (planned: GCP, matching the Gemini ecosystem already in use)
 
 ## Status / Roadmap
-- ✅ Python-Fundamentals (OOP, Decorators, Generators, Context Manager, Type Hints)
-- ✅ SQL & SQLAlchemy (Joins, CTEs, Window Functions, Normalisierung, ER-Modellierung, rohes DDL)
+- ✅ Python fundamentals (OOP, decorators, generators, context managers, type hints)
+- ✅ SQL & SQLAlchemy (joins, CTEs, window functions, normalization, ER modeling, raw DDL)
 - ✅ Git-Flow, CI/CD (GitHub Actions), Docker
-- ✅ GenAI-Fundamentals (Tokens, Attention, Prompting, CoT, ReAct, RAG-Architektur, Embeddings, RAGAS-Konzepte)
-- ✅ LangChain/LCEL & RAG-System (Chunking, Embeddings, Chroma Vector Store, Metadata-Filtering, vollständige RAG-Chain)
-- 🔄 Agents & Tool Calling (LangGraph) — in Arbeit
-- ⬜ Tiny-Transformer-Sprachmodell from Scratch (PyTorch)
-- ⬜ Cloud-Deployment (GCP)
+- ✅ GenAI fundamentals (tokens, attention, prompting, CoT, ReAct, RAG architecture, embeddings, RAGAS concepts)
+- ✅ LangChain/LCEL & RAG system (chunking, embeddings, Chroma vector store, metadata filtering, full RAG chain)
+- 🔄 Agents & tool calling (LangGraph), in progress
+- ⬜ Tiny transformer language model from scratch (PyTorch)
+- ⬜ Cloud deployment (GCP)
 
-## Kontakt
-Fragen? Gerne über GitHub.
+## Contact
+Questions? Feel free to reach out via GitHub.
 
-Letzte Aktualisierung: August 2026
+Last updated: August 2026
